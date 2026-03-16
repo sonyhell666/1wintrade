@@ -11,8 +11,6 @@ const ADMIN="dogcat1223@list.ru";
 export default function RootLayout({children}:{children:React.ReactNode}){
 const [u,setU]=useState<any>(null);
 const [l,setL]=useState(true);
-const [supportOpen,setSupportOpen]=useState(false);
-const [supportMsg,setSupportMsg]=useState('');
 const [chat,setChat]=useState<any[]>([]);
 const path=usePathname();
 const router=useRouter();
@@ -24,25 +22,14 @@ useEffect(()=>{
    const {data:p}=await sb.from('profiles').select('is_blocked').eq('id',user.id).single();
    if(p?.is_blocked){ await sb.auth.signOut(); alert('АККАУНТ ЗАБЛОКИРОВАН'); router.push('/login'); return; }
    setU(user);
-   const {data:m}=await sb.from('chat_messages').select('*').eq('user_email',user.email).order('id',{ascending:true});
-   if(m) setChat(m);
   }
   setL(false);
   if(!user && path!=='/login') router.push('/login');
  };
  check();
- const channel = sb.channel('chat_main').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_messages'},(payload)=>{
-  if(u && payload.new.user_email === u.email) setChat(prev=>[...prev, payload.new]);
- }).subscribe();
  const {data:auth}=sb.auth.onAuthStateChange((e,s)=>{ if(e==='SIGNED_OUT'){setU(null);router.push('/login')} if(e==='SIGNED_IN')check(); });
- return ()=>{ auth.subscription.unsubscribe(); sb.removeChannel(channel); };
+ return ()=>auth.subscription.unsubscribe();
 },[path,u?.email]);
-
-const sendMsg=async()=>{
- if(!supportMsg.trim()||!u) return;
- await sb.from('chat_messages').insert([{user_email:u.email,message:supportMsg,is_admin:false}]);
- setSupportMsg('');
-};
 
 if(l) return ( <html lang="ru"><body className="bg-[#0f172a] flex items-center justify-center min-h-screen font-sans"><div className="text-blue-400 font-[1000] text-4xl tracking-tighter uppercase animate-pulse italic">1WINTRADE...</div></body></html> );
 if(path==='/login') return ( <html lang="ru"><body>{children}</body></html> );
@@ -75,16 +62,15 @@ return (
       {n:'Пополнение',h:'/deposits'},
       {n:'Приём',h:'/banks'},
       {n:'Выплата',h:'/withdrawals'},
-      // НОВЫЕ КНОПКИ
       {n:'БТ',h:'/bt'},
       {n:'Ферма',h:'/farm'},
       {n:'Внутренний трафик',h:'/internal-traffic'},
+      {n:'Мои операторы',h:'/my-operators'}, // ПЕРЕНЕСЕНО
+      {n:'Трансгран',h:'/transgran'},        // НОВОЕ
       {n:'Заказать отчет',h:'/order-report'},
-      // ---
       {n:'Обработка обращений',h:'/payment-support'},
       {n:'Реквизиты',h:'/my-wallets'},
-      {n:'История',h:'/history'},
-      {n:'Мои операторы',h:'/my-operators'}
+      {n:'История',h:'/history'}
      ].map(m=>(
       <Link key={m.h} href={m.h} className={`block p-4 rounded-2xl text-[10px] font-black tracking-widest transition-all text-center ${path===m.h ? 'bg-blue-600 text-white shadow-xl shadow-blue-900/40 hover:bg-blue-700' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>{m.n}</Link>
      ))}

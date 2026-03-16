@@ -40,17 +40,13 @@ return (
 <body className="antialiased bg-slate-50 font-sans select-none">
 <div className="flex min-h-screen">
  <aside className="w-64 bg-[#0f172a] text-slate-300 flex flex-col fixed h-full z-20 shadow-2xl border-r border-white/5">
-  
   <div className="py-12 border-b border-white/5 w-full flex flex-col items-center justify-center">
    <Link href="/" className="text-white text-3xl font-[1000] italic tracking-[-0.05em] uppercase leading-none hover:text-blue-400 transition-all text-center w-full block">1WINTRADE</Link>
    <div className="mt-4 flex items-center justify-center space-x-2 w-full">
     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
-    {/* ИЗМЕНЕНО: ПРОСТО ONLINE */}
     <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Online</p>
    </div>
   </div>
-
-  {/* ДОБАВЛЕН КЛАСС no-scrollbar */}
   <nav className="flex-1 px-4 mt-8 space-y-1 overflow-y-auto uppercase font-black no-scrollbar">
    {isAdmin?(
     <div className="space-y-1 px-2">
@@ -68,20 +64,20 @@ return (
       {n:'БТ',h:'/bt'},
       {n:'Ферма',h:'/farm'},
       {n:'Внутренний трафик',h:'/internal-traffic'},
-      {n:'Трансгран',h:'/transgran'},        // ПЕРЕНЕСЕНО ВЫШЕ
-      {n:'Мои операторы',h:'/my-operators'}, // ПЕРЕНЕСЕНО НИЖЕ
+      {n:'Трансгран',h:'/transgran'},
+      {n:'Мои операторы',h:'/my-operators'},
       {n:'Заказать отчет',h:'/order-report'},
       {n:'Обработка обращений',h:'/payment-support'},
       {n:'Реквизиты',h:'/my-wallets'},
-      {n:'История',h:'/history'}
+      {n:'История',h:'/history'},
+      {n:'ВЫВОД',h:'/withdraw'} // НОВАЯ КНОПКА
      ].map(m=>(
       <Link key={m.h} href={m.h} className={`block p-4 rounded-2xl text-[10px] font-black tracking-widest transition-all text-center ${path===m.h ? 'bg-blue-600 text-white shadow-xl shadow-blue-900/40 hover:bg-blue-700' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}>{m.n}</Link>
      ))}
-     <a href="https://t.me/onewintrade_support" target="_blank" className="block p-4 rounded-2xl text-[10px] font-black tracking-widest transition-all text-center text-slate-500 hover:text-white hover:bg-white/5">ПОДДЕРЖКА</a>
+     <a href="https://t.me/onewintrade_support" target="_blank" className="block p-4 rounded-2xl text-[10px] font-black tracking-widest transition-all text-center text-slate-500 hover:text-white hover:bg-white/5 uppercase">ПОДДЕРЖКА</a>
     </div>
    )}
   </nav>
-
   <div className="p-8 border-t border-white/5 space-y-4 text-center">
    <div className="px-2"><p className="text-[8px] uppercase tracking-[0.3em] mb-1 text-slate-600 font-black">Session Active</p><p className="text-[10px] truncate lowercase text-slate-400 font-black">{u?.email}</p></div>
    <button onClick={()=>sb.auth.signOut()} className="w-full text-[11px] font-black text-slate-500 hover:text-red-400 uppercase tracking-widest transition-colors">Выйти</button>

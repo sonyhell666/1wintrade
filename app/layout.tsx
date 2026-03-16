@@ -11,7 +11,6 @@ const ADMIN="dogcat1223@list.ru";
 export default function RootLayout({children}:{children:React.ReactNode}){
 const [u,setU]=useState<any>(null);
 const [l,setL]=useState(true);
-const [chat,setChat]=useState<any[]>([]);
 const path=usePathname();
 const router=useRouter();
 
@@ -31,7 +30,7 @@ useEffect(()=>{
  return ()=>auth.subscription.unsubscribe();
 },[path,u?.email]);
 
-if(l) return ( <html lang="ru"><body className="bg-[#0f172a] flex items-center justify-center min-h-screen font-sans"><div className="text-blue-400 font-[1000] text-4xl tracking-tighter uppercase animate-pulse italic">1WINTRADE...</div></body></html> );
+if(l) return ( <html lang="ru"><body className="bg-[#0f172a] flex items-center justify-center min-h-screen font-sans"><div className="text-blue-400 font-[1000] text-4xl tracking-tighter uppercase animate-pulse">1WINTRADE...</div></body></html> );
 if(path==='/login') return ( <html lang="ru"><body>{children}</body></html> );
 
 const isAdmin=u?.email===ADMIN;
@@ -41,14 +40,18 @@ return (
 <body className="antialiased bg-slate-50 font-sans select-none">
 <div className="flex min-h-screen">
  <aside className="w-64 bg-[#0f172a] text-slate-300 flex flex-col fixed h-full z-20 shadow-2xl border-r border-white/5">
+  
   <div className="py-12 border-b border-white/5 w-full flex flex-col items-center justify-center">
    <Link href="/" className="text-white text-3xl font-[1000] italic tracking-[-0.05em] uppercase leading-none hover:text-blue-400 transition-all text-center w-full block">1WINTRADE</Link>
    <div className="mt-4 flex items-center justify-center space-x-2 w-full">
     <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
-    <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">System Online</p>
+    {/* ИЗМЕНЕНО: ПРОСТО ONLINE */}
+    <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Online</p>
    </div>
   </div>
-  <nav className="flex-1 px-4 mt-8 space-y-1 overflow-y-auto uppercase font-black">
+
+  {/* ДОБАВЛЕН КЛАСС no-scrollbar */}
+  <nav className="flex-1 px-4 mt-8 space-y-1 overflow-y-auto uppercase font-black no-scrollbar">
    {isAdmin?(
     <div className="space-y-1 px-2">
      {[ {n:'Дашборд',h:'/'},{n:'Проекты',h:'/projects'},{n:'Клиенты',h:'/clients'},{n:'Транзакции',h:'/admin-transactions'},{n:'Обращения',h:'/admin-support'},{n:'Пользователи',h:'/admin-users'},{n:'Настройка Приема',h:'/banks'} ].map(m=>(
@@ -65,8 +68,8 @@ return (
       {n:'БТ',h:'/bt'},
       {n:'Ферма',h:'/farm'},
       {n:'Внутренний трафик',h:'/internal-traffic'},
-      {n:'Мои операторы',h:'/my-operators'}, // ПЕРЕНЕСЕНО
-      {n:'Трансгран',h:'/transgran'},        // НОВОЕ
+      {n:'Трансгран',h:'/transgran'},        // ПЕРЕНЕСЕНО ВЫШЕ
+      {n:'Мои операторы',h:'/my-operators'}, // ПЕРЕНЕСЕНО НИЖЕ
       {n:'Заказать отчет',h:'/order-report'},
       {n:'Обработка обращений',h:'/payment-support'},
       {n:'Реквизиты',h:'/my-wallets'},
@@ -78,6 +81,7 @@ return (
     </div>
    )}
   </nav>
+
   <div className="p-8 border-t border-white/5 space-y-4 text-center">
    <div className="px-2"><p className="text-[8px] uppercase tracking-[0.3em] mb-1 text-slate-600 font-black">Session Active</p><p className="text-[10px] truncate lowercase text-slate-400 font-black">{u?.email}</p></div>
    <button onClick={()=>sb.auth.signOut()} className="w-full text-[11px] font-black text-slate-500 hover:text-red-400 uppercase tracking-widest transition-colors">Выйти</button>
